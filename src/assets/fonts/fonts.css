@@ -1,0 +1,30 @@
+/* Vela Sans */
+@font-face {
+    font-family: 'Vela Sans';
+    src: url('./VelaSans/VelaSans-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'Vela Sans';
+    src: url('./VelaSans/VelaSans-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-display: swap;
+  }
+  
+  /* Montserrat */
+  @font-face {
+    font-family: 'Montserrat';
+    src: url('./Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype');
+    font-display: swap;
+  }
+  
+  /* AG AvantGarde Cyr */
+  @font-face {
+    font-family: 'AGAvantGardeCyrBook';
+    src: url('./AGAvantGardeCyr/AGAvantGardeCyrBook.woff2') format('woff');
+    font-weight: 400;
+    font-display: swap;
+  }
+  
