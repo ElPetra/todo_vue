@@ -2,7 +2,7 @@
   <div class="task__item" >
     <div class="item checkbox">
       <label class="custom__checkbox">
-        <input type="checkbox" v-model="task.completed" />
+        <input type="checkbox" :checked="task.completed" @change="toggle" />
         <span class="checkmark"></span>
       </label>
     </div>
@@ -19,15 +19,22 @@
 </template>
 
 <script setup>
-import { computed, defineProps } from "vue";
+import { computed, defineProps, defineEmits } from "vue";
 
 const props = defineProps(["task"]);
+const emit = defineEmits(["update:task"]);
 
 const formattedDate = computed(() => {
   const date = new Date(props.task.date);
   return date.toLocaleDateString("ru-RU");
 });
+
+function toggle() {
+  // Эмитим обновленную задачу
+  emit("update:task", { ...props.task, completed: !props.task.completed });
+}
 </script>
+
 
 <style scoped>
 .task__item {

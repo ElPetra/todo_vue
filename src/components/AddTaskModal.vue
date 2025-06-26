@@ -9,7 +9,13 @@
       <div class="modal__content">
         <label class="madal__label">
           Описание
-          <input class="modal__input" v-model="description" placeholder="Введите описание" />
+          <input
+  class="modal__input"
+  v-model="description"
+  placeholder="Введите описание"
+  ref="descriptionInput"
+  @keydown="handleKeydown"
+/>
         </label>
       </div>
 
@@ -21,27 +27,45 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-
-const description = ref("");
-const completed = ref(false);
-const date = ref(new Date().toISOString().split("T")[0]);
+import { ref } from 'vue';
 
 const emit = defineEmits(["add-task", "close"]);
 
+const description = ref("");
+const descriptionInput = ref(null);
+
+function focusInput() {
+  descriptionInput.value?.focus();
+}
+defineExpose({ focusInput });
+
+const completed = ref(false);
+const date = new Date().toISOString().split("T")[0];
+
 function save() {
   if (!description.value.trim()) return;
-
   const task = {
+    id: Date.now() + Math.random().toString(16).slice(2),
     description: description.value,
-    completed: completed.value,
-    date: date.value,
+    completed: false,
+    date: new Date().toISOString().split("T")[0],
   };
-
   emit("add-task", task);
+  emit("close");
+  description.value = "";
+}
+
+function handleKeydown(event) {
+  if (event.key === 'Enter') {
+    save();
+  }
+}
+
+function handleOverlayClick() {
   emit("close");
 }
 </script>
+
 
 <style scoped>
 .modal__overlay {
@@ -110,6 +134,7 @@ function save() {
   font-size: 14px;
   line-height: 100%;
 }
+
 .modal__input {
   max-width: 319px;
   width: 100%;
@@ -117,12 +142,13 @@ function save() {
   margin-top: 5px;
   box-sizing: border-box;
   font-family: "AGAvantGardeCyrBook", sans-serif;
-  color: #16191D;
+  color: #16191d;
   font-size: 14px;
   line-height: 132%;
   border: 1px solid #dde2e4;
   border-radius: 8px;
 }
+
 .modal__input::placeholder {
   color: #000000;
   opacity: 0.5;
@@ -166,7 +192,7 @@ function save() {
   cursor: pointer;
   border: none;
   border-radius: 8px;
-  background-color: #F0F5FF;
+  background-color: #f0f5ff;
   color: #314b99;
   line-height: 132%;
 }

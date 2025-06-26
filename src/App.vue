@@ -14,19 +14,21 @@
         <div class="header__item status">Статус</div>
         <div class="header__item date">Дата</div>
       </div>
-      <TodoList :tasks="sortedTasks" />
+      <TodoList :tasks="sortedTasks" @update-task="updateTask" />
+
     </div>
 
     <AddTaskModal
-      v-if="showModal"
-      @close="showModal = false"
-      @add-task="addTask"
-    />
+  v-if="showModal"
+  @close="showModal = false"
+  @add-task="addTask"
+  ref="addTaskModal"
+/>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watchEffect } from "vue";
+import { ref, computed, watch, nextTick, watchEffect } from "vue";
 import TodoList from "./components/TodoList.vue";
 import SearchAndSort from "./components/SearchAndSort.vue";
 import AddTaskModal from "./components/AddTaskModal.vue";
@@ -35,6 +37,15 @@ const tasks = ref([]);
 const searchText = ref("");
 const sortType = ref("date");
 const showModal = ref(false);
+const addTaskModal = ref(null);
+
+watch(showModal, (newVal) => {
+  if (newVal) {
+    nextTick(() => {
+      addTaskModal.value?.focusInput();
+    });
+  }
+});
 
 watchEffect(() => {
   const saved = localStorage.getItem("tasks");
@@ -66,7 +77,14 @@ const sortedTasks = computed(() => {
 function addTask(task) {
   tasks.value.push(task);
 }
+function updateTask(updatedTask) {
+  const index = tasks.value.findIndex(t => t.id === updatedTask.id);
+  if (index !== -1) {
+    tasks.value.splice(index, 1, updatedTask);
+  }
+}
 </script>
+<TodoList :tasks="sortedTasks" @update-task="updateTask" />
 
 <style scoped>
 #app {
